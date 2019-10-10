@@ -84,7 +84,7 @@ public class DaoMercado {
       public static List<Mercado> consultar() {
         List<Mercado> resultados = new ArrayList<>();
         //editar o SQL conforme a entidade
-        String sql = "SELECT codigo, nome_fantasia, razao_social, fundacao, nr_funcionario, valor_bolsa FROM produto";
+        String sql = "SELECT codigo, nome_fantasia, razao_social, fundacao, nr_funcionario, valor_bolsa FROM mercado";
         PreparedStatement ps;
         try {
             ps = conexao.Conexao.getConexao().prepareStatement(sql);
@@ -107,4 +107,28 @@ public class DaoMercado {
             return null;
         }
 }
+       public static Mercado consultar(int primaryKey) {
+        //editar o SQL conforme a entidade
+        String sql = "SELECT codigo, nome_fantasia, razao_social, fundacao, nr_funcionario, valor_bolsa FROM mercado WHERE codigo=?";
+        PreparedStatement ps;
+        try {
+            ps = conexao.Conexao.getConexao().prepareStatement(sql);
+            ps.setInt(1, primaryKey);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Mercado objeto = new Mercado();
+                //definir um set para cada atributo da entidade, cuidado com o tipo
+                objeto.setCodigo(rs.getInt("codigo"));
+                objeto.setNome_fantasia(rs.getString("nome_fantasia"));
+                objeto.setRazao_social(rs.getString("razao_social"));
+                objeto.setFundacao(rs.getDate("fundacao").toLocalDate());
+                objeto.setNr_funcionario(rs.getInt("nr_funcionario"));
+                objeto.setValor_bolsa(rs.getDouble("valor_bolsa"));
+                return objeto;//não mexa nesse, ele adiciona o objeto na lista
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
 }

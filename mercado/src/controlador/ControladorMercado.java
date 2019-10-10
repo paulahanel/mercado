@@ -11,6 +11,11 @@ import javax.swing.JOptionPane;
 import modelo.Mercado;
 import  java.time.LocalDate; 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import java.util.Vector;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Administrador
@@ -28,6 +33,10 @@ public class ControladorMercado {
         boolean resultado = DaoMercado.inserir(objeto);
         if (resultado) {
             JOptionPane.showMessageDialog(null, "Inserido com sucesso!");
+            if (man.listagem != null) {
+     atualizarTabela(man.listagem.tabela); //atualizar a tabela da listagem
+     }
+     man.dispose();//fechar a tela da manutenção
         } else {
             JOptionPane.showMessageDialog(null, "Erro!");
         }
@@ -45,6 +54,10 @@ public class ControladorMercado {
         boolean resultado = DaoMercado.alterar(objeto);
         if (resultado) {
             JOptionPane.showMessageDialog(null, "Alterado com sucesso!");
+            if (man.listagem != null) {
+     atualizarTabela(man.listagem.tabela); //atualizar a tabela da listagem
+}
+man.dispose();//fechar a tela da manutenção
         } else {
             JOptionPane.showMessageDialog(null, "Erro!");
         }
@@ -57,9 +70,50 @@ public class ControladorMercado {
         boolean resultado = DaoMercado.excluir(objeto);
         if (resultado) {
             JOptionPane.showMessageDialog(null, "Excluído com sucesso!");
+            if (man.listagem != null) {
+     atualizarTabela(man.listagem.tabela); //atualizar a tabela da listagem
+}
+man.dispose();//fechar a tela da manutenção
         } else {
             JOptionPane.showMessageDialog(null, "Erro!");
         }
     }
-    
+     public static void atualizarTabela(JTable tabela) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        //definindo o cabeçalho da tabela
+        modelo.addColumn("Código");
+        modelo.addColumn("Nome Fantasia");
+        modelo.addColumn("Razão Social");
+        modelo.addColumn("Fundação");
+        modelo.addColumn("Número Funcionários");
+        modelo.addColumn("Valor na Bolsa");
+        List<Mercado> resultados = DaoMercado.consultar();
+        for (Mercado objeto : resultados) {
+            Vector linha = new Vector();
+            
+            //definindo o conteúdo da tabela
+            linha.add(objeto.getCodigo());
+            linha.add(objeto.getNome_fantasia());
+            linha.add(objeto.getRazao_social());
+            linha.add(objeto.getFundacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            linha.add(objeto.getNr_funcionario());
+            linha.add(objeto.getValor_bolsa());
+            modelo.addRow(linha); //adicionando a linha na tabela
+        }
+        tabela.setModel(modelo);
+    }
+     
+    public static void atualizaCampos(ManutencaoMercado man, int pk){ 
+        Mercado objeto = DaoMercado.consultar(pk);
+        //Definindo os valores do campo na tela (um para cada atributo/campo)
+        man.jtfCodigo.setText(objeto.getCodigo().toString());
+        man.jtfNome_fantasia.setText(objeto.getNome_fantasia());
+        man.jtfRazao_social.setText(objeto.getRazao_social());
+        man.jtfFundacao.setText(objeto.getFundacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        man.jtfNr_funcionario.setText(objeto.getNr_funcionario().toString());
+        man.jtfValor_bolsa.setText(objeto.getValor_bolsa().toString());
+        
+        man.jtfCodigo.setEnabled(false); //desabilitando o campo código
+        man.btnAdicionar.setEnabled(false); //desabilitando o botão adicionar
+    }
 }
