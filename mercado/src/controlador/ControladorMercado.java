@@ -32,5 +32,34 @@ public class ControladorMercado {
             JOptionPane.showMessageDialog(null, "Erro!");
         }
 }
+
+    public static void alterar(ManutencaoMercado man){
+        Mercado objeto = new Mercado();
+        //definir todos os atributos
+        objeto.setCodigo(Integer.parseInt(man.jtfCodigo.getText()));
+        objeto.setNome_fantasia(man.jtfNome_fantasia.getText());
+        objeto.setRazao_social(man.jtfRazao_social.getText());
+        objeto.setFundacao(LocalDate.parse(man.jtfFundacao.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        objeto.setNr_funcionario(Integer.parseInt(man.jtfNr_funcionario.getText()));
+        objeto.setValor_bolsa(Double.parseDouble(man.jtfValor_bolsa.getText()));
+        boolean resultado = DaoMercado.alterar(objeto);
+        if (resultado) {
+            JOptionPane.showMessageDialog(null, "Alterado com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro!");
+        }
+    }
+
+     public static void excluir(ManutencaoMercado man){
+        Mercado objeto = new Mercado();
+        objeto.setCodigo(Integer.parseInt(man.jtfCodigo.getText())); //só precisa definir a chave primeira
+        
+        boolean resultado = DaoMercado.excluir(objeto);
+        if (resultado) {
+            JOptionPane.showMessageDialog(null, "Excluído com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro!");
+        }
+    }
     
 }

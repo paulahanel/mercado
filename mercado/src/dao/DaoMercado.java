@@ -49,4 +49,33 @@ public class DaoMercado {
             JOptionPane.showMessageDialog(null, "Erro!");
         }
     }
+     public static boolean alterar(Mercado objeto) {
+        String sql = "UPDATE mercado SET nome_fantasia = ?, razao_social = ?, fundacao = ?, nr_funcionario = ?, valor_bolsa = ? WHERE codigo=?";
+        try {
+            PreparedStatement ps = conexao.Conexao.getConexao().prepareStatement(sql);
+            ps.setString(1, objeto.getNome_fantasia()); 
+            ps.setString(2, objeto.getRazao_social());
+            ps.setDate(3, Date.valueOf(objeto.getFundacao())); //fazer a seguinte importação: java.sql.Date 
+            ps.setInt(4, objeto.getNr_funcionario());
+            ps.setDouble(5, objeto.getValor_bolsa());
+            ps.setInt(6, objeto.getCodigo());
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
+      public static boolean excluir(Mercado objeto) {
+        String sql = "DELETE FROM mercado WHERE codigo=?";
+        try {
+            PreparedStatement ps = conexao.Conexao.getConexao().prepareStatement(sql);
+            ps.setInt(1, objeto.getCodigo());
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
 }
